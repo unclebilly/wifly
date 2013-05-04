@@ -16,8 +16,7 @@ module Wifly
 
     ##
     # str =>  the command to send to the wifly, without any carriage return
-    # [return_len] => the expected length of the return string
-    # [remove_prompt] => remove the version prompt from the returned string
+    # [return_len] => the expected length of the return string; defaults to 0
     #
     # The wifly will echo back the command (with carriage return)
     # along with another CRLF and the command prompt string.
@@ -36,17 +35,13 @@ module Wifly
     end
 
     def socket
-      if @socket.nil?
-        @socket = initialize_socket
-      end
-      @socket
+      @socket ||= initialize_socket
     end
     
     private
     def prompt
       "<#{version}> "
     end
-
 
     def initialize_socket
       sock = Socket.tcp(address, port)

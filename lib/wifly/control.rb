@@ -5,11 +5,11 @@ module Wifly
     attr_accessor :connection
 
     ##
-    # address - the hostname or ip address 
-    # port    - defaults to 2000
-    # version - the firmware version
-    # connection - the object to use for talking to the wifly. Reponds to "send_command."
-    #              Defaults to Wifly::Connection 
+    # address    - the hostname or IP address 
+    # port       - defaults to 2000
+    # version    - the firmware version (a string)
+    # connection - the object to use for talking to the wifly. Responds to "send_command."
+    #              Defaults to Wifly::Connection. 
     #
     def initialize(address, port, version, connection=nil)
       self.connection   = connection || Connection.new(address, port, version)
