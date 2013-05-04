@@ -1,6 +1,6 @@
 # Wifly
 
-This Ruby gem can be used to talk to a [WiFly RN-XV](http://www.rovingnetworks.com/products/RN171XV) device at a specified address.  The gem has no dependencies other than the socket libraries that ship with any Ruby installation.  The gem takes advantage of the predictable size of the response strings from the WiFly by using blocking IO operations.  Using blocking operations significantly reduces the complexity of the code.  There are a couple of caveats with using IO, though: 
+This Ruby gem can be used to talk to a [WiFly RN-XV](http://www.rovingnetworks.com/products/RN171XV) device at a specified address.  The gem has no dependencies other than the socket libraries that ship with any Ruby installation.  The gem takes advantage of the predictable size of the response strings from the WiFly by using blocking IO operations.  Using blocking operations significantly reduces the complexity of the code.  There are a couple of caveats with using blocking reads, though: 
 * Unexpected output from the WiFly could cause the client to deadlock on a socket read, or could cause corrupt data in subsequent reads.  I've tried to find the variants of output that I'm concerned with in my project; however, you might find some edge cases I haven't covered.  In that case, pull requests are welcome. 
 * The version of the firmware must be passed into the client so that the size of the response strings can be predicted.  
 
