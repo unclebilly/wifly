@@ -18,8 +18,8 @@ describe Wifly::Control do
 
   it 'should set high and low' do
     connection = double('connection')
-    connection.should_receive(:send_command).with("set sys output 0x20 0x20", Wifly::Control::AOK.length)
-    connection.should_receive(:send_command).with("set sys output 0x00 0x20", Wifly::Control::AOK.length)
+    connection.should_receive(:send_command).with("set sys output 0x20 0x20", Wifly::AOK.length)
+    connection.should_receive(:send_command).with("set sys output 0x00 0x20", Wifly::AOK.length)
     control = Wifly::Control.new('localhost', 2000, '1.2', connection)
     control.set_high(5)
     control.set_low(5)

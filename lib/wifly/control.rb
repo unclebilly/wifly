@@ -1,7 +1,5 @@
 module Wifly
   class Control
-    AOK = "\r\nAOK"
-
     attr_accessor :connection
 
     ##

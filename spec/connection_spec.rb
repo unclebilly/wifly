@@ -8,17 +8,17 @@ class Wifly::TestServer
 
   def simple_connect
     @client = @socket.accept
-    self.input = @client.read('$$$\r'.length) 
-    @client.write(Wifly::Connection::HELLO)
+    self.input = @client.read(Wifly::COMMAND_MODE.length) 
+    @client.write(Wifly::HELLO)
     @client.close
   end
 
   def receive_command(command, version)
     @client = @socket.accept
 
-    @client.write(Wifly::Connection::HELLO)
-    @client.read((command + '\r').length)
-    @client.write(command + '\r\r\n<' + version + '> ')
+    @client.write(Wifly::HELLO)
+    @client.read((command + "\r").length)
+    @client.write(command + "\r\r\n<" + version + '> ')
     @client.close
   end
 end
@@ -41,7 +41,7 @@ describe Wifly::Connection do
     connection = Wifly::Connection.new('localhost', 2000, '2.3.13')
     connection.socket
     t.join
-    @server.input.should eq('$$$\r')
+    @server.input.should eq(Wifly::COMMAND_MODE)
     connection.close
   end
 
@@ -53,7 +53,7 @@ describe Wifly::Connection do
 
     result = connection.send_command("lites")
     t.join
-    result.should eq('lites\r\r\n')
+    result.should eq("lites\r\r\n")
     connection.close
   end
 end

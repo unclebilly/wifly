@@ -21,7 +21,7 @@ Or install it yourself as:
 ## Usage
 Create a client by passing in the host, port, and firmware version:
 
-    control = Wifly::Control.new('192.168.1.45', 2000, '2.31.7')
+    control = Wifly::Control.new('192.168.1.45', 2000, '2.38.3')
 
 Read the high pins:
 

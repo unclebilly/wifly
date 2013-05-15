@@ -1,7 +1,5 @@
 module Wifly
   class Connection
-    HELLO = '*HELLO*CMD\r\n'
-
     attr_accessor :address, :port, :version
   
     ##
@@ -24,10 +22,10 @@ module Wifly
     # Since the string has a predictable length, we can do a blocking read.
     #
     def send_command(str, return_len=0)
-      str += '\r'
+      str += "\r"
       socket.write(str)
-      expected_return_length = str.length + '\r\n#{prompt}'.length + return_len
-      socket.read(expected_return_length).gsub(prompt,'') 
+      expected_return_length = str.length + "\r\n#{prompt}".length + return_len
+      socket.read(expected_return_length).gsub(prompt,'')
     end
 
     def close
@@ -45,8 +43,8 @@ module Wifly
 
     def initialize_socket
       sock = Socket.tcp(address, port)
-      sock.write('$$$\r') # enter command mode 
-      sock.read(HELLO.length)       # read off the response, "*HELLO*CMD\r\n"
+      sock.write(COMMAND_MODE) # enter command mode 
+      sock.read(HELLO.length)  # read off the response
       sock
     end 
   end
