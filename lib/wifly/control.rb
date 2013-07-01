@@ -1,5 +1,7 @@
 module Wifly
   class Control
+    include Calculations
+    
     attr_accessor :connection
 
     ##
@@ -18,18 +20,6 @@ module Wifly
     #
     def lites
       connection.send_command("lites")
-    end
-
-    ##
-    # Return an array containing the numbers of the pins that are in HIGH state
-    #
-    def high_pins
-      io=read_io
-                      #"8d08"   36104   "1000110100001000"   make it 16 bits
-      binary_string = io       .hex     .to_s(2)             .rjust(io.size*4, '0')
-      binary_string.reverse.split("").each_with_index.map do |value, pin|
-        pin if value == "1"
-      end.compact
     end
 
     ##
@@ -52,17 +42,7 @@ module Wifly
     # given a pin number, return 1 if high or 0 if low
     #
     def read_pin(pin)
-      high_pins.include?(pin) ? 1 : 0
-    end
-
-    ## 
-    # Given a pin number, return the hex code that corresponds to it
-    #
-    def pin_to_hex(pin)
-      return "0x0" if pin == 0
-      binstr = "0b1" + ("0" * pin) # make a binary string with a 1 in `pin` position
-      base10 = binstr.to_i(2)      # convert to base 10
-      "0x" + base10.to_s(16)       # return hexadecimal string
+      high_pins(read_io).include?(pin) ? 1 : 0
     end
 
     private

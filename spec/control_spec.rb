@@ -8,9 +8,10 @@ describe Wifly::Control do
 
   it 'should get high pins' do
     connection = double('connection')
-    connection.should_receive(:send_command).exactly(3).times.and_return("show io\r\r\n8d08\r\n")
+    connection.should_receive(:send_command).exactly(2).times.and_return("show io\r\r\n8d08\r\n")
     control = Wifly::Control.new('localhost', 2000, '1.2', connection)
-    result = control.high_pins
+
+    result = control.high_pins('8d08')
     result.should eq([3, 8, 10, 11, 15])
     control.read_pin(8).should eq(1)
     control.read_pin(7).should eq(0)

@@ -1,5 +1,6 @@
 require 'socket'
 require 'wifly/connection'
+require 'wifly/calculations'
 require 'wifly/control'
 require 'wifly/version'
 
