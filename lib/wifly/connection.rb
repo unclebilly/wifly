@@ -26,6 +26,9 @@ module Wifly
       socket.write(str)
       expected_return_length = str.length + "\r\n#{prompt}".length + return_len
       socket.read(expected_return_length).gsub(prompt,'')
+    rescue Errno::EPIPE # connection closed on the client end
+      initialize_socket
+      retry
     end
 
     def close
