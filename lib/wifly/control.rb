@@ -42,7 +42,14 @@ module Wifly
     # given a pin number, return 1 if high or 0 if low
     #
     def read_pin(pin)
-      high_pins(read_io).include?(pin) ? 1 : 0
+      high_pins.include?(pin) ? 1 : 0
+    end
+
+    ##
+    # Return an array of all the pins which are currently high 
+    #
+    def high_pins
+      parse_io(read_io)
     end
 
     private

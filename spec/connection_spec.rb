@@ -1,4 +1,4 @@
-require 'wifly'
+require 'spec_helper'
 class Wifly::TestServer
   attr_accessor :input
 

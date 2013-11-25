@@ -1,9 +1,10 @@
 module Wifly
   module Calculations
     ##
-    # Return an array containing the numbers of the pins that are in HIGH state
+    # Parse the hexadecimal string returned from the show_io command
+    # into an array of pins that are high 
     #
-    def high_pins(hex_str)
+    def parse_io(hex_str)
                       #"8d08"   36104   "1000110100001000"   make it 16 bits
       binary_string = hex_str   .hex     .to_s(2)             .rjust(hex_str.size*4, '0')
       binary_string.reverse.split("").each_with_index.map do |value, pin|
