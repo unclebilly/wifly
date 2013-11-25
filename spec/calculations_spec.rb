@@ -15,5 +15,7 @@ describe Wifly::Calculations do
     control = WiflyControlShim.new
     result = control.parse_io('8d08')
     result.should eq([3, 8, 10, 11, 15])
+    result = control.parse_io('8103')
+    result.should eq([0, 1, 8, 15])
   end
 end
