@@ -1,15 +1,13 @@
 module Wifly
   class Connection
-    attr_accessor :address, :port, :version
+    attr_accessor :address, :port
   
     ##
     # address => the hostname or IP address of the wifly device
     # port =>    the port for communicating with the wifly
-    # version => the firmware version of the device
-    def initialize(address, port, version)
+    def initialize(address, port)
       self.address = address
       self.port    = port
-      self.version = version
     end
 
     ##
@@ -19,17 +17,14 @@ module Wifly
     # The wifly will echo back the command (with carriage return)
     # along with another CRLF and the command prompt string.
     # Something like "lites\r\r\n<2.32> "
-    # Since the string has a predictable length, we can do a blocking read.
     #
-    def send_command(str, return_len=0)
+    def send_command(str)
       str += "\r"
-      socket.write(str)
-      expected_return_length = str.length + "\r\n#{prompt}".length + return_len
-      socket.read(expected_return_length).gsub(prompt,'')
-    rescue Errno::EPIPE # connection closed on the client end
-      initialize_socket
-      retry
+      write(socket, str) # the write is blocking
+      sleep(0.2)
+      read(socket).gsub(prompt,'')
     end
+
 
     def close
       socket.close
@@ -40,14 +35,43 @@ module Wifly
     end
     
     private
+
+    def read(sock)
+      result = ''
+      begin
+        result = sock.read_nonblock(1024)
+      # connection lost somehow
+      rescue Errno::ECONNRESET, Errno::EPIPE, IOError
+        initialize_socket
+        read(socket)
+      # No more data on socket
+      rescue Errno::EAGAIN
+        retry
+      rescue EOFError => e
+        # ain't nothin left on socket.  
+      end
+      result.strip
+    end
+
+    def write(sock, str)
+      begin
+        sock.write(str)
+      rescue Errno::EPIPE, IOError
+        initialize_socket
+        write(socket, str)
+      end
+    end
+
     def prompt
-      "<#{version}> "
+      # 2.32
+      # 3.2.23
+      /<[0-9]{1,}\.[0-9]{1,}(\.[0-9]{1,})?>/
     end
 
     def initialize_socket
       sock = Socket.tcp(address, port)
-      sock.write(COMMAND_MODE) # enter command mode 
-      sock.read(HELLO.length)  # read off the response
+      write(sock, COMMAND_MODE) # enter command mode 
+      read(sock) # read off the response
       sock
     end 
   end

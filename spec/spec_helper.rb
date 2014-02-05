@@ -5,6 +5,10 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require 'wifly'
+require 'pry'
+
+# If you set WIFLY_IP, a special "real" test will run against your WiFly.
+WIFLY_IP = ENV['WIFLY_IP'] || nil
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true

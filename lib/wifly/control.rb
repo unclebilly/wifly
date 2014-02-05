@@ -7,12 +7,11 @@ module Wifly
     ##
     # address    - the hostname or IP address 
     # port       - defaults to 2000
-    # version    - the firmware version (a string)
     # connection - the object to use for talking to the wifly. Responds to "send_command."
     #              Defaults to Wifly::Connection. 
     #
-    def initialize(address, port, version, connection=nil)
-      self.connection   = connection || Connection.new(address, port, version)
+    def initialize(address, port, connection=nil)
+      self.connection   = connection || Connection.new(address, port)
     end
 
     ##
@@ -27,7 +26,7 @@ module Wifly
     #
     def set_high(pin)
       hex = pin_to_hex(pin)
-      connection.send_command "set sys output #{hex} #{hex}", AOK.length
+      connection.send_command "set sys output #{hex} #{hex}"
     end
 
     ##
@@ -35,7 +34,7 @@ module Wifly
     #
     def set_low(pin)
       hex = pin_to_hex(pin)
-      connection.send_command "set sys output 0x00 #{hex}", AOK.length
+      connection.send_command "set sys output 0x00 #{hex}"
     end
 
     ##
@@ -52,6 +51,13 @@ module Wifly
       parse_io(read_io)
     end
 
+    ##
+    # Close the connection.    
+    #
+    def close
+      connection.close
+    end
+
     private
 
     ##
@@ -60,9 +66,8 @@ module Wifly
     def read_io
       cmd = "show io\r"
 
-      # wifly spits back something like 'show io\r\r\n8d08\r\n<2.32> '
-      # crucially, the middle part "8d08\r\n" is always the same length
-      str = connection.send_command("show io", "8d08\r\n".length)
+      # result is something like 'show io\r\r\n8d08'
+      str = connection.send_command "show io"
 
       # Return only the middle part, which is the io state
       str.gsub(cmd,'').strip

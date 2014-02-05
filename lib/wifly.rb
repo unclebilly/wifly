@@ -1,3 +1,4 @@
+$: << File.expand_path("..", __FILE__)
 require 'socket'
 require 'wifly/connection'
 require 'wifly/calculations'
